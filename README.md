@@ -1,5 +1,6 @@
 # QuotesGameWebsite
 
+### To do:
 1. Use quotes api (https://api-ninjas.com/api/quotes)
 2. Have a random quote appear on the screen
 3. The user has to guess who wrote the quote (author)
