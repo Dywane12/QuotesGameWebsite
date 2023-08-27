@@ -13,6 +13,8 @@ const Game = () => {
     const [wrong, setWrong] = useState(false);
     const [points, setPoints] = useState(0);
     const [win, setWin] = useState(false);
+    const [loadingButton, setLoadingButton] = useState(false);
+    const [loadingQuote, setLoadingQuote] = useState(true);
 
 
     useEffect(() => {
@@ -21,6 +23,7 @@ const Game = () => {
         }).then(resp => {
             console.log(resp);
             setData(resp.data);
+            setLoadingQuote(false);
         })
     }, []) 
 
@@ -30,7 +33,7 @@ const Game = () => {
                 setCorrect(true);
                 setWrong(false);
                 setPoints(points + 1);
-                if(points == 5) {
+                if(points == 4) {
                     setWin(true);
                 }
         }
@@ -41,16 +44,36 @@ const Game = () => {
     }
 
     const nextClickedHandler = () => {
+        setLoadingQuote(true);
         axios.get('https://api.api-ninjas.com/v1/quotes?category=',{
             headers: { 'X-Api-Key': 't5uH4CHnIvhCe1J1jemWVA==oKu96FgPeJT5o3np'}
         }).then(resp => {
             console.log(resp);
             setData(resp.data);
+            setLoadingQuote(false);
         });
 
         setGuess("");
         setCorrect(false);
         setWrong(false);
+        setLoadingButton(false);
+    }
+
+    const playAgainHandler = () => {
+        setLoadingQuote(true);
+        axios.get('https://api.api-ninjas.com/v1/quotes?category=',{
+            headers: { 'X-Api-Key': 't5uH4CHnIvhCe1J1jemWVA==oKu96FgPeJT5o3np'}
+        }).then(resp => {
+            console.log(resp);
+            setData(resp.data);
+            setLoadingQuote(false);
+        });
+        setWin(false);
+        setPoints(0);
+        setCorrect(false);
+        setWrong(false);
+        setLoadingButton(false);
+        setGuess("");
     }
 
     return(
@@ -65,7 +88,7 @@ const Game = () => {
                 <div style={{textAlign: "center"}}> 
                 <h2 style={{margin: 25, fontSize: 25}}>Who said this quote?</h2>
                 {
-                    data[0] && data[0].quote ? <div style={{margin: 50, fontSize: 22}}>{data[0].quote}</div> : <p>loading...</p>
+                    data[0] && data[0].quote && !loadingQuote ? <div style={{margin: 50, fontSize: 22}}>{data[0].quote}</div> : <p>loading...</p>
                 }
                 <form onSubmit={handleSubmit}>
                         <Input 
@@ -80,7 +103,8 @@ const Game = () => {
                         size="large"
                         htmlType="submit"
                         style={{margin: 10}}
-                        >Submit!</Button>
+                        loading={loadingButton}
+                        onClick={() => {setLoadingButton(true)}}>Submit!</Button>
                     </form>
                 { 
                     correct ? (
@@ -100,7 +124,11 @@ const Game = () => {
                 }
                 
                 </div>
-            ) : <h1>You win!</h1>
+            ) : (
+            <div style={{textAlign: "center"}}>
+               <h1 style={{margin: 25}}>You win!</h1>
+               <Button onClick={playAgainHandler} size="large">Play again?</Button>
+            </div>)
         }
         
         </>
