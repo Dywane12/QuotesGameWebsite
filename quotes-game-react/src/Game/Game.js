@@ -19,7 +19,7 @@ const Game = () => {
 
     useEffect(() => {
         axios.get('https://api.api-ninjas.com/v1/quotes?category=',{
-            headers: { 'X-Api-Key': 't5uH4CHnIvhCe1J1jemWVA==oKu96FgPeJT5o3np'}
+            headers: { 'X-Api-Key': 'API_Key'}
         }).then(resp => {
             console.log(resp);
             setData(resp.data);
